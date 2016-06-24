@@ -27,7 +27,7 @@ public class KafkaUtil {
         if(kc == null) {  
             Properties props = new Properties();  
             props.put("bootstrap.servers", "Slave01.Hadoop:9092,Slave02.Hadoop:9092,Slave03.Hadoop:9092");  
-            props.put("group.id", "1");  
+            props.put("group.id", "4");  
             props.put("enable.auto.commit", "false");
             //请参考KafkaConsumer类的说明和例子
             //设置成false。这样使用kafkaconsumer.poll的时候，才会取出没消费的数据。

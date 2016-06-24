@@ -18,7 +18,7 @@ import careland.kafka.util.KafkaUtil;
 public class KafkaConsumerTest {
 	
     public static void main(String[] args) throws Exception{  
-    	consumer();
+    	finerOffset();
     }
     /**
      * 这个是一次性取出来就不管了，kafka认为取出来的数据是肯定能被处理的。所以是consumer.commitSync();，这样poll出来的数据认为是全都提交了。
@@ -35,13 +35,13 @@ public class KafkaConsumerTest {
             	System.out.println("fetch data:"+record.value());
                 buffer.add(record);
                 Thread.sleep(2000);  
-            }
-            if (buffer.size() >= minBatchSize) {
-                insertIntoDb(buffer);
-                //这行代码是重点
-                consumer.commitSync();
-                System.out.println("commit");
-                buffer.clear();
+                if (buffer.size() >= minBatchSize) {
+                	insertIntoDb(buffer);
+                	//这行代码是重点
+                	consumer.commitSync();
+                	System.out.println("commit");
+                	buffer.clear();
+                }
             }
         }
 	} 
@@ -66,7 +66,8 @@ public class KafkaConsumerTest {
                         System.out.println(partition.toString()+":"+record.offset() + ": " + record.value());
                     }
                     long lastOffset = partitionRecords.get(partitionRecords.size() - 1).offset();
-                    consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(lastOffset + 1)));
+                  //  consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(lastOffset + 1)));
+                    consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(1)));
                 }
             }
         } finally {
